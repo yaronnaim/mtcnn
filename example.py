@@ -47,6 +47,15 @@ cv2.circle(image,(keypoints['nose']), 2, (0,155,255), 2)
 cv2.circle(image,(keypoints['mouth_left']), 2, (0,155,255), 2)
 cv2.circle(image,(keypoints['mouth_right']), 2, (0,155,255), 2)
 
-cv2.imwrite("ivan_drawn.jpg", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
-
+image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+cv2.imwrite("ivan_drawn.jpg", image)
 print(result)
+# Window name in which image is displayed
+window_name = 'image'
+
+# Using cv2.imshow() method
+# Displaying the image
+cv2.imshow(window_name, image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
