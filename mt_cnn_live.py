@@ -51,6 +51,21 @@ def draw_faces(filename, result_list):
 	pyplot.show()
 
 
+def plotBoubdingBox(image, result, scale=1, facial_landmarks=False):
+	x, y, w, h = [i*scale for i in result['box']]
+	#x, y, w, h = scale * (result['box'])
+	cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+
+	if facial_landmarks == False:
+		return
+	else:
+		for key, value in result['keypoints'].items():
+			cv2.circle(image, (value[0]*scale, value[1]*scale),
+					   			radius=2,
+					   			color=(255, 0, 0),
+					   			thickness=2)
+
+
 # Print MTCC version
 print('Multi-Task Cascaded Convolutional Neural Network, version = ',
 					mtcnn.__version__)
@@ -66,22 +81,18 @@ while True:
 	# print(width, height, color)
 
 	# Resize image by decimation factor
-	decimation = 8
+	decimation = 10
 	height2 = np.int(height/decimation)
 	width2 = np.int(width/decimation)
-	img = cv2.resize(img, (height2, width2))
 
-	RGBimage = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+	# Resize and convert to RGB
+	RGBimageResized = cv2.cvtColor(cv2.resize(img, (height2, width2)),
+								  cv2.COLOR_BGR2RGB)
 
 	# detect faces in the image
-	faces = detector.detect_faces(RGBimage)
+	faces = detector.detect_faces(RGBimageResized)
 	for result in faces:
-		x, y, w, h = result['box']
-		cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 2)
-		roi_gray = RGBimage[y:y+h, x:x+w]
-		roi_color = img[y:y+h, x:x+w]
-		for key, value in result['keypoints'].items():
-			cv2.circle(img, value, radius=2, color=(255,0,0), thickness=2)
+		plotBoubdingBox(img, result, decimation, True)
 	cv2.imshow('img', img)
 	k = cv2.waitKey((30) & 0xff)
 	if k == 27:
@@ -90,6 +101,9 @@ while True:
 print('Frame size is ', width2, height2, color)
 cap.release()
 cv2.destroyAllWindows()
+
+
+
 
 
 
