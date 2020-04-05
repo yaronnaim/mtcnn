@@ -43,6 +43,7 @@ def plot_bounding_box(image, result, scale=1,
         # Line thickness of 2 px
         thickness = 1
 
+        # Add confidence score to image
         cv2.putText(image, confidence_string, (x, y-2), font, fontScale,
                     color, thickness)
     return
